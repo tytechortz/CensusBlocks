@@ -5,6 +5,10 @@ venv
 data
 data/**
 /data
+tabblock20/**
+/tabblock20
+tabblock20/
 .csv
 .ipynb
+
 .ipynb_checkpoints
