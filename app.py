@@ -37,5 +37,31 @@ app.layout = dbc.Container([
     dbc.Row(dcc.Graph(id='ct-map', figure=blank_fig(500))),
 ])
 
+@app.callback(
+    Output("sa-map", "figure"),
+    Input("map-category", "value"),
+    # Input("graph-type", "value"),
+    Input("tracts", "value")
+)
+def update_Choropleth(category, tracts):
+
+    # changed_id = ctx.triggered[0][['prop_id'].split('.')[0]]
+    # print(changed_id)
+    
+    geo_tracts_highlights = ()
+    
+    if tracts != None:
+        geo_tracts_highlights = geo_data[geo_data['FIPS'].isin(tracts)]
+    
+        # print(geo_tracts_highlights)
+
+    
+    fig = get_figure(df, geo_data, geo_tracts_highlights)
+
+
+
+
+    return fig
+
 if __name__ == "__main__":
     app.run_server(debug=True, port=8000)
