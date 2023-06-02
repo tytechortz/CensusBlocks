@@ -17,10 +17,10 @@ def get_svi_data():
     df = df.rename(columns={'GEOID': 'GEOID20'})
     # df['FIPS'] = df['FIPS'].astype(str)
     # df = df.set_index("FIPS")
-    print(df.columns)
-    print(geo_data.columns)
+    # print(df.columns)
+    # print(geo_data.columns)
     df = geo_data.merge(df, on="GEOID20")
-    print(df)
+    # print(df.columns)
 
     return df
 

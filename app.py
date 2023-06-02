@@ -28,6 +28,7 @@ theme = {
 
 df = get_svi_data()
 geo_data = get_geo_data()
+# print(df)
 
 # all_tracts = geo_data["FIPS"].values
 
@@ -47,7 +48,7 @@ def blank_fig(height):
 
 app.layout = dbc.Container([
     header,
-    dbc.Row(dcc.Graph(id='ct-map', figure=blank_fig(500))),
+    dbc.Row(dcc.Graph(id='sa-map', figure=blank_fig(500))),
     dbc.Row([
         dbc.Col([
             dcc.RadioItems(
@@ -71,7 +72,7 @@ app.layout = dbc.Container([
             #     style={"color": "black"},
             #     value=(),
             # ),
-            dcc.Dropdown(id='graph-type')
+            # dcc.Dropdown(id='graph-type')
         ], width=4)
     ]),
 ])
@@ -79,11 +80,11 @@ app.layout = dbc.Container([
 @app.callback(
     Output("sa-map", "figure"),
     Input("map-category", "value"),
-    Input("graph-type", "value"),
+    # Input("graph-type", "value"),
     # Input("tracts", "value")
 )
-def update_Choropleth(category, tracts):
-
+def update_Choropleth(category):
+    print(category)
     # changed_id = ctx.triggered[0][['prop_id'].split('.')[0]]
     # print(changed_id)
     
@@ -93,9 +94,9 @@ def update_Choropleth(category, tracts):
     #     geo_tracts_highlights = geo_data[geo_data['FIPS'].isin(tracts)]
     
         # print(geo_tracts_highlights)
-
+    print(df)
     
-    fig = get_figure(geo_data)
+    fig = get_figure(df)
 
 
 

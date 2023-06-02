@@ -7,7 +7,7 @@ import geopandas as gpd
 
 
 
-def get_Choropleth(geo_data, marker_opacity, fig=None):
+def get_Choropleth(df, marker_opacity, fig=None):
     # print(df.index)
     # print(geo_data["FIPS"])
     if fig is None:
@@ -15,7 +15,7 @@ def get_Choropleth(geo_data, marker_opacity, fig=None):
 
     fig.add_trace(
         go.Choroplethmapbox(
-            geojson=eval(geo_data['geometry'].to_json()),
+            geojson=eval(df['geometry'].to_json()),
             # locations=df.index,
             # z=df['E_TOTPOP'],
             marker_opacity = marker_opacity,
@@ -35,10 +35,10 @@ def get_map(df):
     return fig
 
 
-def get_figure(geo_data):
+def get_figure(df):
 
- 
-    fig = get_Choropleth(geo_data, marker_opacity=0.4)
+    print(df)
+    fig = get_Choropleth(df, marker_opacity=0.4)
    
     
     fig.update_layout(mapbox_style="carto-positron", 
