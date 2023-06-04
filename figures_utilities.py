@@ -17,7 +17,7 @@ def get_Choropleth(df, marker_opacity, fig=None):
         go.Choroplethmapbox(
             geojson=eval(df['geometry'].to_json()),
             locations=df.index,
-            z=df['P1_001N'],
+            z=df['Total'],
             marker_opacity = marker_opacity,
             # customdata=df["FIPS"]
         )

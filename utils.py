@@ -5,7 +5,7 @@ import pandas as pd
 
 def get_svi_data():
     # df = pd.read_csv('DECENNIALDHC2020.P1-Data.csv')
-    df1 = pd.read_csv('BlockGroupPop', dtype=str)
+    df1 = pd.read_csv('BlockGroupPop.csv', dtype=str)
     # geo_data = gpd.read_file('Census_Blocks_2020_SHAPE_WGS/Census_Blocks_2020_WGS.shp')
     geo_data = gpd.read_file('tl_2022_08_bg (1)/tl_2022_08_bg.shp')
     # print(geo_data)
@@ -34,7 +34,7 @@ def get_svi_data():
     # print(df.columns)
     # print(geo_data.columns)
     df = geo_arap.merge(df1, on="GEOID")
-    # print(df.columns)
+    print(df.columns)
     # print(df['GEOID'])
 
     return df
