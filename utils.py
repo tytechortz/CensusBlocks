@@ -18,8 +18,8 @@ def get_svi_data():
     # print(df.dtypes)
     
     geo_arap = geo_data[geo_data['COUNTYFP'] == "005"]
-    print(df1['GEOID'])
-    print(geo_arap['GEOID'])
+    # print(df1['GEOID'])
+    # print(geo_arap['GEOID'])
     
     # df.drop(columns=['Unnamed: 4', 'P1_001NA', 'NAME'], axis=1, inplace=True)
     # df = df.drop(df.index[0])
