@@ -94,7 +94,7 @@ def update_Choropleth(category):
     #     geo_tracts_highlights = geo_data[geo_data['FIPS'].isin(tracts)]
     
         # print(geo_tracts_highlights)
-    print(df)
+    # print(df)
     
     fig = get_figure(df)
 
