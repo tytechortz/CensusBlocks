@@ -58,7 +58,7 @@ app.layout = dbc.Container([
                 id="geometry",
                 options=[
                     {"label": i, "value": i}
-                    for i in ["Blocks", "Block Groups"]
+                    for i in ["Blocks", "Block Groups", "Tracts"]
                 ],
                 value="Blocks",
                 inline=True
