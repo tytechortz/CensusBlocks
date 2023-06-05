@@ -9,7 +9,7 @@ from figures_utilities import (
 )
 
 from utils import (
-    get_tract_data,
+    get_block_data,
     get_block_group_data,
     get_block_group_geo_data
 )
@@ -58,9 +58,9 @@ app.layout = dbc.Container([
                 id="geometry",
                 options=[
                     {"label": i, "value": i}
-                    for i in ["Tracts", "Block Groups"]
+                    for i in ["Blocks", "Block Groups"]
                 ],
-                value="Block Groups",
+                value="Blocks",
                 inline=True
             ),
         ], width=2),
@@ -101,8 +101,11 @@ app.layout = dbc.Container([
 def update_Choropleth(geometry):
     if geometry == "Block Groups":
         df = get_block_group_data()
+    elif geometry == "Blocks":
+        df = get_block_data()
+    
 
-    print(df)
+    # print(df)
     # df = pd.DataFrame(data["result"])
     # print(df)
     # changed_id = ctx.triggered[0][['prop_id'].split('.')[0]]
