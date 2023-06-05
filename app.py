@@ -1,14 +1,17 @@
 from dash import Dash, html, dcc, Input, Output, State, ctx
 import dash_bootstrap_components as dbc
 import geopandas as gpd
+import pandas as pd
 import plotly.graph_objects as go
+import json
 from figures_utilities import (
     get_figure
 )
 
 from utils import (
-    get_svi_data,
-    get_geo_data
+    get_tract_data,
+    get_block_group_data,
+    get_block_group_geo_data
 )
 
 app = Dash(__name__, suppress_callback_exceptions=True, external_stylesheets=[dbc.themes.DARKLY])
@@ -26,8 +29,8 @@ theme = {
     'secondary': '#6E6E6E',
 }
 
-df = get_svi_data()
-geo_data = get_geo_data()
+# df = get_svi_data()
+# geo_data = get_geo_data()
 # print(df)
 
 # all_tracts = geo_data["FIPS"].values
@@ -52,12 +55,12 @@ app.layout = dbc.Container([
     dbc.Row([
         dbc.Col([
             dcc.RadioItems(
-                id="map-category",
+                id="geometry",
                 options=[
                     {"label": i, "value": i}
-                    for i in ["SVI", "Facilities"]
+                    for i in ["Tracts", "Block Groups"]
                 ],
-                value="SVI",
+                value="Block Groups",
                 inline=True
             ),
         ], width=2),
@@ -75,16 +78,33 @@ app.layout = dbc.Container([
             # dcc.Dropdown(id='graph-type')
         ], width=4)
     ]),
+    # dcc.Store(id='pop-data', storage_type='session'),
 ])
+
+# @app.callback(
+#         Output('pop-data', 'data'),
+#         Input('geometry', 'value')
+# )
+# def get_pop_data(geometry):
+#     if geometry == 'Block Groups':
+#         df_sel = get_block_group_data()
+#         print(df_sel)
+
+#     return df_sel.to_json()
 
 @app.callback(
     Output("sa-map", "figure"),
-    Input("map-category", "value"),
-    # Input("graph-type", "value"),
+    # Input("pop-data", "data"),
+    Input("geometry", "value"),
     # Input("tracts", "value")
 )
-def update_Choropleth(category):
-    print(category)
+def update_Choropleth(geometry):
+    if geometry == "Block Groups":
+        df = get_block_group_data()
+
+    print(df)
+    # df = pd.DataFrame(data["result"])
+    # print(df)
     # changed_id = ctx.triggered[0][['prop_id'].split('.')[0]]
     # print(changed_id)
     
