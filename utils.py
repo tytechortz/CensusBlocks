@@ -18,8 +18,20 @@ def get_svi_data():
     # print(df.dtypes)
     
     geo_arap = geo_data[geo_data['COUNTYFP'] == "005"]
+    
+    # df1['GEOID'] = df1['GEOID'].astype(int)
+    # geo_arap['GEOID'] = geo_arap['GEOID'].astype(int)
+    # geo_arap = geo_arap.sort_values(by=['GEOID'], ascending=True)
+    # print("DF1")
     # print(df1['GEOID'])
+    # print("GEO_ARAP")
+    # df1['Total'].astype(int)
+    df1['Total'] = df1['Total'].str.replace(',', '').astype(int)
+    
     # print(geo_arap['GEOID'])
+    print(df1.dtypes)
+    # geo_arap.to_csv('GEO.csv')
+    # df1.to_csv('DF1.csv')
     
     # df.drop(columns=['Unnamed: 4', 'P1_001NA', 'NAME'], axis=1, inplace=True)
     # df = df.drop(df.index[0])
@@ -29,12 +41,13 @@ def get_svi_data():
     # print(df['NAME'])
     # print(geo_data['GEOID20'])
     # df = df.rename(columns={'GEOID': 'GEOID20'})
-    df1['GEOID'] = df1['GEOID'].astype(str)
+    # df1['GEOID'] = df1['GEOID'].astype(str)
     # df = df.set_index("FIPS")
     # print(df.columns)
     # print(geo_data.columns)
     df = geo_arap.merge(df1, on="GEOID")
-    print(df.columns)
+    df.to_csv("GEOID.csv")
+    # print(df.columns)
     # print(df['GEOID'])
 
     return df

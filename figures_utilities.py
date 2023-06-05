@@ -8,8 +8,7 @@ import geopandas as gpd
 
 
 def get_Choropleth(df, marker_opacity, fig=None):
-    # print(df.columns)
-    # print(geo_data["FIPS"])
+    
     if fig is None:
         fig = go.Figure()
 
@@ -19,7 +18,8 @@ def get_Choropleth(df, marker_opacity, fig=None):
             locations=df.index,
             z=df['Total'],
             marker_opacity = marker_opacity,
-            # customdata=df["FIPS"]
+            customdata=df["GEOID"],
+            hoverinfo='z'
         )
     )
 
