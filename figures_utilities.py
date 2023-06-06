@@ -37,7 +37,7 @@ def get_map(df):
 
 def get_figure(df):
 
-    print(df)
+    # print(df)
     fig = get_Choropleth(df, marker_opacity=0.4)
    
     
