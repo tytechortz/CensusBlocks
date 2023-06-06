@@ -4,6 +4,7 @@ import geopandas as gpd
 import pandas as pd
 import plotly.graph_objects as go
 import json
+import random
 from figures_utilities import (
     get_figure
 )
@@ -29,6 +30,11 @@ theme = {
     'primary': '#00EA64',
     'secondary': '#6E6E6E',
 }
+
+CT_data = get_tract_data()
+tracts = CT_data["TRACTCE"].values
+initial_tract = random.choice(tracts)
+intitial_geo_tract = CT_data.loc[CT_data["TRACTCE"] == initial_tract]
 
 # df = get_svi_data()
 # geo_data = get_geo_data()
@@ -66,16 +72,16 @@ app.layout = dbc.Container([
             ),
         ], width=2),
         dbc.Col([
-            # dcc.Dropdown(
-            #     id="tracts",
-            #     options=[
-            #         {"label": i, "value": i}
-            #         for i in all_tracts
-            #     ],
-            #     multi=True,
-            #     style={"color": "black"},
-            #     value=(),
-            # ),
+            dcc.Dropdown(
+                id="tracts",
+                options=[
+                    {"label": i, "value": i}
+                    for i in tracts
+                ],
+                multi=True,
+                style={"color": "black"},
+                value=(),
+            ),
             # dcc.Dropdown(id='graph-type')
         ], width=4)
     ]),
@@ -108,6 +114,9 @@ def update_Choropleth(geometry):
         df = get_tract_data()
     
 
+    changed_id = ctx.triggered_id
+    print(changed_id)
+    geo_tracts = dict()
     # print(df)
     # df = pd.DataFrame(data["result"])
     # print(df)
