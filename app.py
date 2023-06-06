@@ -13,7 +13,8 @@ from utils import (
     get_tract_data,
     get_block_data,
     get_block_group_data,
-    get_block_group_geo_data
+    get_block_group_geo_data,
+    get_tract_geo_data,
 )
 
 app = Dash(__name__, suppress_callback_exceptions=True, external_stylesheets=[dbc.themes.DARKLY])
@@ -31,13 +32,15 @@ theme = {
     'secondary': '#6E6E6E',
 }
 
-CT_data = get_tract_data()
-tracts = CT_data["TRACTCE"].values
+tract_geo_data = get_tract_geo_data()
+tracts = tract_geo_data["FIPS"].values
+# CT_data = get_tract_data()
+# tracts = CT_data["TRACTCE"].values
 initial_tract = random.choice(tracts)
-intitial_geo_tract = CT_data.loc[CT_data["TRACTCE"] == initial_tract]
+intitial_geo_tract = tract_geo_data.loc[tract_geo_data["TRACTCE"] == initial_tract]
 
 # df = get_svi_data()
-# geo_data = get_geo_data()
+
 # print(df)
 
 # all_tracts = geo_data["FIPS"].values
@@ -98,6 +101,32 @@ app.layout = dbc.Container([
 #         print(df_sel)
 
 #     return df_sel.to_json()
+@app.callback(
+        Output("tracts", "value"),
+        Input("sa-map", "clickData"),
+        Input("sa-map", "selectedData"),
+        State("tracts", "value"),
+        State("sa-map", "clickData")
+)
+
+def update_tract_dropdown(clickData, selectedData, tracts, clickData_state):
+
+    if ctx.triggered[0]["value"] is None:
+        return tracts
+    print(selectedData)
+    print(tracts)
+    changed_id = [p["prop_id"] for p in ctx.triggered][0]
+
+    if clickData is not None and "customdata" in clickData["points"][0]:
+        tract = clickData["points"][0]["customdata"]
+      
+        if tract in tracts:
+            tracts.remove(tract)
+        elif len(tracts) < 10:
+            tracts.append(tract)
+
+  
+    return tracts
 
 @app.callback(
     Output("sa-map", "figure"),
@@ -128,7 +157,7 @@ def update_Choropleth(geometry):
     # if tracts != None:
     #     geo_tracts_highlights = geo_data[geo_data['FIPS'].isin(tracts)]
     
-        # print(geo_tracts_highlights)
+    #     print(geo_tracts_highlights)
     # print(df)
     
     fig = get_figure(df)

@@ -58,3 +58,9 @@ def get_block_group_geo_data():
     # print(geo_data)
 
     return geo_data
+
+def get_tract_geo_data():
+    geo_data = gpd.read_file('2020_CT/ArapahoeCT.shp')
+    # print(geo_data)
+
+    return geo_data
