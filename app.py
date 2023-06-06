@@ -9,6 +9,7 @@ from figures_utilities import (
 )
 
 from utils import (
+    get_tract_data,
     get_block_data,
     get_block_group_data,
     get_block_group_geo_data
@@ -60,7 +61,7 @@ app.layout = dbc.Container([
                     {"label": i, "value": i}
                     for i in ["Blocks", "Block Groups", "Tracts"]
                 ],
-                value="Blocks",
+                value="Tracts",
                 inline=True
             ),
         ], width=2),
@@ -103,6 +104,8 @@ def update_Choropleth(geometry):
         df = get_block_group_data()
     elif geometry == "Blocks":
         df = get_block_data()
+    elif geometry == "Tracts":
+        df = get_tract_data()
     
 
     # print(df)
