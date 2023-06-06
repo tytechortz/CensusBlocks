@@ -7,7 +7,7 @@ import geopandas as gpd
 
 
 
-def get_Choropleth(df, tracts_geo_data, marker_opacity, fig=None):
+def get_Choropleth(df, tracts_geo_data, marker_opacity, marker_line_width, marker_line_color, fig=None):
     print(marker_opacity)
     if fig is None:
         fig = go.Figure()
@@ -18,6 +18,8 @@ def get_Choropleth(df, tracts_geo_data, marker_opacity, fig=None):
             locations=df.index,
             z=df['Total'],
             marker_opacity = marker_opacity,
+            marker_line_width = marker_line_width,
+            marker_line_color = marker_line_color,
             customdata=df["GEOID"],
             hoverinfo='z'
         )
@@ -38,7 +40,8 @@ def get_map(df):
 def get_figure(df, tracts_geo_data, geo_tracts_highlights):
 
     # print(df)
-    fig = get_Choropleth(df, tracts_geo_data, marker_opacity=0.4)
+    fig = get_Choropleth(df, tracts_geo_data, marker_opacity=0.4,
+                         marker_line_width=1, marker_line_color='#6666cc')
     print(len(geo_tracts_highlights))
     
     fig.update_layout(mapbox_style="carto-positron", 
@@ -49,7 +52,8 @@ def get_figure(df, tracts_geo_data, geo_tracts_highlights):
                             uirevision='constant')
     
     if len(geo_tracts_highlights) != 0:
-        fig = get_Choropleth(df, geo_tracts_highlights, marker_opacity=1.0, fig=fig)
+        fig = get_Choropleth(df, geo_tracts_highlights, marker_opacity=1.0,
+                             marker_line_width=3, marker_line_color='aqua', fig=fig)
     
 
     return fig
