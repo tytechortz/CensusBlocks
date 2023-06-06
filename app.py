@@ -34,16 +34,7 @@ theme = {
 
 tract_geo_data = get_tract_geo_data()
 all_tracts = tract_geo_data["FIPS"].values
-# CT_data = get_tract_data()
-# tracts = CT_data["TRACTCE"].values
-# initial_tract = random.choice(tracts)
-# intitial_geo_tract = tract_geo_data.loc[tract_geo_data["TRACTCE"] == initial_tract]
 
-# df = get_svi_data()
-
-print(tract_geo_data.columns)
-
-# all_tracts = geo_data["FIPS"].values
 
 def blank_fig(height):
     """
@@ -91,16 +82,6 @@ app.layout = dbc.Container([
     # dcc.Store(id='pop-data', storage_type='session'),
 ])
 
-# @app.callback(
-#         Output('pop-data', 'data'),
-#         Input('geometry', 'value')
-# )
-# def get_pop_data(geometry):
-#     if geometry == 'Block Groups':
-#         df_sel = get_block_group_data()
-#         print(df_sel)
-
-#     return df_sel.to_json()
 @app.callback(
         Output("tracts", "value"),
         Input("sa-map", "clickData"),
@@ -113,10 +94,9 @@ def update_tract_dropdown(clickData, selectedData, tracts, clickData_state):
 
     if ctx.triggered[0]["value"] is None:
         return tracts
-    # print(selectedData)
-    # print(tracts)
+   
     changed_id = [p["prop_id"] for p in ctx.triggered][0]
-    # print(clickData)
+    
 
     if clickData is not None and "customdata" in clickData["points"][0]:
         tract = clickData["points"][0]["customdata"]
@@ -125,7 +105,7 @@ def update_tract_dropdown(clickData, selectedData, tracts, clickData_state):
             tracts.remove(tract)
         elif len(tracts) < 10:
             tracts.append(tract)
-    print(tracts)
+    
   
     return tracts
 
@@ -143,33 +123,14 @@ def update_Choropleth(geometry, tracts):
     elif geometry == "Tracts":
         df = get_tract_data()
     
-    print(tracts)
-    # changed_id = ctx.triggered_id
-    # print(changed_id)
-    # geo_tracts = dict()
-    # print(df)
-    # df = pd.DataFrame(data["result"])
-    # print(df)
-    # changed_id = ctx.triggered[0][['prop_id'].split('.')[0]]
-    # print(changed_id)
-    # a = ['8005080600']
-    # print(tract_geo_data.columns)
-    # print(tract_geo_data)
-    # df1 = tract_geo_data[tract_geo_data['FIPS'].isin(a)]
-    # print(df1)
-    # print(type(tract_geo_data))
     geo_tracts_highlights = ()
     
     if tracts != None:
         tracts = list(map(str, tracts))
         geo_tracts_highlights = tract_geo_data[tract_geo_data['FIPS'].isin(tracts)]
     
-        # print(geo_tracts_highlights)
-    # print(df)
     
     fig = get_figure(df, tract_geo_data, geo_tracts_highlights)
-
-
 
 
     return fig

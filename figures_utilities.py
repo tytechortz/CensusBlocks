@@ -8,7 +8,7 @@ import geopandas as gpd
 
 
 def get_Choropleth(df, tracts_geo_data, marker_opacity, marker_line_width, marker_line_color, fig=None):
-    print(marker_opacity)
+    
     if fig is None:
         fig = go.Figure()
 
@@ -42,7 +42,7 @@ def get_figure(df, tracts_geo_data, geo_tracts_highlights):
     # print(df)
     fig = get_Choropleth(df, tracts_geo_data, marker_opacity=0.4,
                          marker_line_width=1, marker_line_color='#6666cc')
-    print(len(geo_tracts_highlights))
+    
     
     fig.update_layout(mapbox_style="carto-positron", 
                             mapbox_zoom=10.4,
