@@ -7,14 +7,14 @@ import geopandas as gpd
 
 
 
-def get_Choropleth(df, marker_opacity, fig=None):
-    
+def get_Choropleth(df, tracts_geo_data, marker_opacity, fig=None):
+    print(marker_opacity)
     if fig is None:
         fig = go.Figure()
 
     fig.add_trace(
         go.Choroplethmapbox(
-            geojson=eval(df['geometry'].to_json()),
+            geojson=eval(tracts_geo_data['geometry'].to_json()),
             locations=df.index,
             z=df['Total'],
             marker_opacity = marker_opacity,
@@ -35,11 +35,11 @@ def get_map(df):
     return fig
 
 
-def get_figure(df):
+def get_figure(df, tracts_geo_data, geo_tracts_highlights):
 
     # print(df)
-    fig = get_Choropleth(df, marker_opacity=0.4)
-   
+    fig = get_Choropleth(df, tracts_geo_data, marker_opacity=0.4)
+    print(len(geo_tracts_highlights))
     
     fig.update_layout(mapbox_style="carto-positron", 
                             mapbox_zoom=10.4,
@@ -48,8 +48,8 @@ def get_figure(df):
                             margin={"r":0,"t":0,"l":0,"b":0},
                             uirevision='constant')
     
-    # if len(geo_tracts_highlights) != 0:
-    #     fig = get_Choropleth(df, geo_tracts_highlights, marker_opacity=1.0, fig=fig)
+    if len(geo_tracts_highlights) != 0:
+        fig = get_Choropleth(df, geo_tracts_highlights, marker_opacity=1.0, fig=fig)
     
 
     return fig

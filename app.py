@@ -33,15 +33,15 @@ theme = {
 }
 
 tract_geo_data = get_tract_geo_data()
-tracts = tract_geo_data["FIPS"].values
+all_tracts = tract_geo_data["FIPS"].values
 # CT_data = get_tract_data()
 # tracts = CT_data["TRACTCE"].values
-initial_tract = random.choice(tracts)
-intitial_geo_tract = tract_geo_data.loc[tract_geo_data["TRACTCE"] == initial_tract]
+# initial_tract = random.choice(tracts)
+# intitial_geo_tract = tract_geo_data.loc[tract_geo_data["TRACTCE"] == initial_tract]
 
 # df = get_svi_data()
 
-# print(df)
+print(tract_geo_data.columns)
 
 # all_tracts = geo_data["FIPS"].values
 
@@ -79,7 +79,7 @@ app.layout = dbc.Container([
                 id="tracts",
                 options=[
                     {"label": i, "value": i}
-                    for i in tracts
+                    for i in all_tracts
                 ],
                 multi=True,
                 style={"color": "black"},
@@ -113,9 +113,10 @@ def update_tract_dropdown(clickData, selectedData, tracts, clickData_state):
 
     if ctx.triggered[0]["value"] is None:
         return tracts
-    print(selectedData)
-    print(tracts)
+    # print(selectedData)
+    # print(tracts)
     changed_id = [p["prop_id"] for p in ctx.triggered][0]
+    # print(clickData)
 
     if clickData is not None and "customdata" in clickData["points"][0]:
         tract = clickData["points"][0]["customdata"]
@@ -124,7 +125,7 @@ def update_tract_dropdown(clickData, selectedData, tracts, clickData_state):
             tracts.remove(tract)
         elif len(tracts) < 10:
             tracts.append(tract)
-
+    print(tracts)
   
     return tracts
 
@@ -132,9 +133,9 @@ def update_tract_dropdown(clickData, selectedData, tracts, clickData_state):
     Output("sa-map", "figure"),
     # Input("pop-data", "data"),
     Input("geometry", "value"),
-    # Input("tracts", "value")
+    Input("tracts", "value")
 )
-def update_Choropleth(geometry):
+def update_Choropleth(geometry, tracts):
     if geometry == "Block Groups":
         df = get_block_group_data()
     elif geometry == "Blocks":
@@ -142,25 +143,31 @@ def update_Choropleth(geometry):
     elif geometry == "Tracts":
         df = get_tract_data()
     
-
-    changed_id = ctx.triggered_id
-    print(changed_id)
-    geo_tracts = dict()
+    print(tracts)
+    # changed_id = ctx.triggered_id
+    # print(changed_id)
+    # geo_tracts = dict()
     # print(df)
     # df = pd.DataFrame(data["result"])
     # print(df)
     # changed_id = ctx.triggered[0][['prop_id'].split('.')[0]]
     # print(changed_id)
+    # a = ['8005080600']
+    # print(tract_geo_data.columns)
+    # print(tract_geo_data)
+    # df1 = tract_geo_data[tract_geo_data['FIPS'].isin(a)]
+    # print(df1)
+    # print(type(tract_geo_data))
+    geo_tracts_highlights = ()
     
-    # geo_tracts_highlights = ()
+    if tracts != None:
+        tracts = list(map(str, tracts))
+        geo_tracts_highlights = tract_geo_data[tract_geo_data['FIPS'].isin(tracts)]
     
-    # if tracts != None:
-    #     geo_tracts_highlights = geo_data[geo_data['FIPS'].isin(tracts)]
-    
-    #     print(geo_tracts_highlights)
+        # print(geo_tracts_highlights)
     # print(df)
     
-    fig = get_figure(df)
+    fig = get_figure(df, tract_geo_data, geo_tracts_highlights)
 
 
 
