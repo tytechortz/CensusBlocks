@@ -11,10 +11,11 @@ from figures_utilities import (
 
 from utils import (
     get_tract_data,
-    get_block_data,
-    get_block_group_data,
-    get_block_group_geo_data,
-    get_tract_geo_data,
+    # get_block_data,
+    # get_block_group_data,
+    # get_block_group_geo_data,
+    # get_tract_geo_data,
+    # get_block_geo_data
 )
 
 app = Dash(__name__, suppress_callback_exceptions=True, external_stylesheets=[dbc.themes.DARKLY])
@@ -32,8 +33,10 @@ theme = {
     'secondary': '#6E6E6E',
 }
 
-tract_geo_data = get_tract_geo_data()
-all_tracts = tract_geo_data["FIPS"].values
+tract_geo_data = get_tract_data()
+# bg_geo_data = get_block_group_geo_data()
+# block_geo_data = get_block_geo_data()
+all_tracts = tract_geo_data["GEOID"].values
 
 
 def blank_fig(height):
@@ -118,19 +121,25 @@ def update_tract_dropdown(clickData, selectedData, tracts, clickData_state):
 def update_Choropleth(geometry, tracts):
     if geometry == "Block Groups":
         df = get_block_group_data()
+        geo_data = bg_geo_data
+        # print(geo_data)
+        # print(geo_data.columns)
+        # print(geo_data['GEOID20'])
     elif geometry == "Blocks":
         df = get_block_data()
+        geo_data = block_geo_data
     elif geometry == "Tracts":
         df = get_tract_data()
+        # geo_data = tract_geo_data
     
     geo_tracts_highlights = ()
-    
+    # print(geo_data)
     if tracts != None:
         tracts = list(map(str, tracts))
-        geo_tracts_highlights = tract_geo_data[tract_geo_data['FIPS'].isin(tracts)]
+        geo_tracts_highlights = df[df['GEOID'].isin(tracts)]
     
     
-    fig = get_figure(df, tract_geo_data, geo_tracts_highlights)
+    fig = get_figure(df, geo_tracts_highlights)
 
 
     return fig
