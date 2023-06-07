@@ -37,7 +37,7 @@ tract_geo_data = get_tract_data()
 # bg_geo_data = get_block_group_geo_data()
 # block_geo_data = get_block_geo_data()
 all_tracts = tract_geo_data["GEOID"].values
-
+# print(all_tracts)
 
 def blank_fig(height):
     """
@@ -77,13 +77,24 @@ app.layout = dbc.Container([
                 # ],
                 multi=True,
                 style={"color": "black"},
-                # value=(),
+                value=(),
             ),
             # dcc.Dropdown(id='graph-type')
         ], width=4)
     ]),
     # dcc.Store(id='pop-data', storage_type='session'),
 ])
+
+@app.callback(
+        Output('tracts', 'options'),
+        Input('geometry', 'value'))
+def tract_options(selected_value):
+    print(selected_value)
+    options = ()
+    if selected_value == "Tracts":
+        options = [{'label': i, 'value': i} for i in all_tracts]
+
+    return options 
 
 @app.callback(
         Output("tracts", "value"),
