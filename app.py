@@ -141,16 +141,17 @@ def update_Choropleth(geometry, tracts):
         geo_data = block_geo_data
     elif geometry == "Tracts":
         df = get_tract_data()
-        # geo_data = tract_geo_data
+        print(df)
+        geo_data = tract_geo_data
     
     geo_tracts_highlights = ()
     # print(geo_data)
     if tracts != None:
-        tracts = list(map(str, tracts))
+        # tracts = list(map(str, tracts))
         geo_tracts_highlights = df[df['GEOID'].isin(tracts)]
     
     
-    fig = get_figure(df, geo_tracts_highlights)
+    fig = get_figure(df, geo_data, geo_tracts_highlights)
 
 
     return fig

@@ -7,14 +7,14 @@ import geopandas as gpd
 
 
 
-def get_Choropleth(df, marker_opacity, marker_line_width, marker_line_color, fig=None):
+def get_Choropleth(df, geo_data, marker_opacity, marker_line_width, marker_line_color, fig=None):
     
     if fig is None:
         fig = go.Figure()
 
     fig.add_trace(
         go.Choroplethmapbox(
-            geojson=eval(df['geometry'].to_json()),
+            geojson=eval(geo_data['geometry'].to_json()),
             locations=df.index,
             z=df['Total'],
             marker_opacity = marker_opacity,
@@ -37,10 +37,10 @@ def get_map(df):
     return fig
 
 
-def get_figure(df, geo_tracts_highlights):
+def get_figure(df, geo_data, geo_tracts_highlights):
 
     # print(df)
-    fig = get_Choropleth(df, marker_opacity=0.4,
+    fig = get_Choropleth(df, geo_data, marker_opacity=0.4,
                          marker_line_width=1, marker_line_color='#6666cc')
     
     
