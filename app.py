@@ -71,13 +71,13 @@ app.layout = dbc.Container([
         dbc.Col([
             dcc.Dropdown(
                 id="tracts",
-                options=[
-                    {"label": i, "value": i}
-                    for i in all_tracts
-                ],
+                # options=[
+                #     {"label": i, "value": i}
+                #     for i in all_tracts
+                # ],
                 multi=True,
                 style={"color": "black"},
-                value=(),
+                # value=(),
             ),
             # dcc.Dropdown(id='graph-type')
         ], width=4)
