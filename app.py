@@ -11,7 +11,7 @@ from figures_utilities import (
 
 from utils import (
     get_tract_data,
-    # get_block_data,
+    get_block_data,
     # get_block_group_data,
     # get_block_group_geo_data,
     # get_tract_geo_data,
@@ -33,10 +33,10 @@ theme = {
     'secondary': '#6E6E6E',
 }
 
-tract_geo_data = get_tract_data()
+# tract_geo_data = get_tract_data()
 # bg_geo_data = get_block_group_geo_data()
 # block_geo_data = get_block_geo_data()
-all_tracts = tract_geo_data["GEOID"].values
+# all_tracts = tract_geo_data["GEOID"].values
 # print(all_tracts)
 
 def blank_fig(height):
@@ -82,16 +82,34 @@ app.layout = dbc.Container([
             # dcc.Dropdown(id='graph-type')
         ], width=4)
     ]),
-    # dcc.Store(id='pop-data', storage_type='session'),
+    dcc.Store(id='geo-data', storage_type='session'),
+    dcc.Store(id='all-tracts', storage_type='session'),
 ])
 
 @app.callback(
-        Output('tracts', 'options'),
+        Output('geo-data', 'data'),
+        Output('all-tracts', 'data'),
         Input('geometry', 'value'))
-def tract_options(selected_value):
-    print(selected_value)
+def get_geo_data(geometry):
+    if geometry == 'Tracts':
+        geo_df = get_tract_data()
+        all_tracts = geo_df["GEOID"].values
+        # print(all_tracts)
+        tract_list_df = pd.DataFrame(all_tracts, columns=['tracts'])
+        # print(tract_list_df)
+    return geo_df.to_json(), tract_list_df.to_json()
+
+@app.callback(
+        Output('tracts', 'options'),
+        Input('geometry', 'value'),
+        Input('all-tracts', 'data'))
+def tract_options(geometry, tracts):
+    all_tracts = pd.read_json(tracts)
+    # all_tracts = pd.DataFrame(eval(tracts))
+    # print(all_tracts)
+    # print(geometry)
     options = ()
-    if selected_value == "Tracts":
+    if geometry == "Tracts":
         options = [{'label': i, 'value': i} for i in all_tracts]
 
     return options 
@@ -125,11 +143,11 @@ def update_tract_dropdown(clickData, selectedData, tracts, clickData_state):
 
 @app.callback(
     Output("sa-map", "figure"),
-    # Input("pop-data", "data"),
+    Input("geo-data", "data"),
     Input("geometry", "value"),
     Input("tracts", "value")
 )
-def update_Choropleth(geometry, tracts):
+def update_Choropleth(geo_data, geometry, tracts):
     if geometry == "Block Groups":
         df = get_block_group_data()
         geo_data = bg_geo_data
@@ -141,9 +159,9 @@ def update_Choropleth(geometry, tracts):
         geo_data = block_geo_data
     elif geometry == "Tracts":
         df = get_tract_data()
-        print(df)
-        geo_data = tract_geo_data
-    
+        # print(df)
+        geo_data = gpd.read_file(geo_data)
+        print(geo_data)
     geo_tracts_highlights = ()
     # print(geo_data)
     if tracts != None:

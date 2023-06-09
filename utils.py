@@ -35,24 +35,24 @@ tract_geo_data['GEOID'] = tract_geo_data['GEOID'].astype(int)
 
     # return df
 
-# def get_block_data():
-#     df1 = pd.read_csv('Data/BlockPop.csv')
+def get_block_data():
+    df1 = pd.read_csv('Data/BlockPop.csv')
     
-#     # geo_data = gpd.read_file('Census_Blocks_2020_SHAPE_WGS/Census_Blocks_2020_WGS.shp')
-#     # geo_arap = block_geo_data[geo_data['COUNTYFP'] == "005"]
-#     # print(geo_arap.columns)
-
-#     block_geo_data['GEOID'] = block_geo_data['GEOID'].apply(lambda x: x[9:])
-#     df1['Total'] = df1['Total'].str.replace(',', '').astype(int)
+    # geo_data = gpd.read_file('Census_Blocks_2020_SHAPE_WGS/Census_Blocks_2020_WGS.shp')
+    # geo_arap = block_geo_data[geo_data['COUNTYFP'] == "005"]
+    # print(geo_arap.columns)
+    print(block_geo_data.columns)
+    # block_geo_data['GEOID'] = block_geo_data['GEOID'].apply(lambda x: x[9:])
+    df1['Total'] = df1['Total'].str.replace(',', '').astype(int)
    
-#     block_geo_data['GEOID'] = block_geo_data['GEOID'].astype(int)
-#     print(block_geo_data)
+    block_geo_data['GEOID'] = block_geo_data['GEOID'].astype(int)
+    print(block_geo_data)
     
-#     df = block_geo_data.merge(df1, on="GEOID")
+    df = block_geo_data.merge(df1, on="GEOID")
    
     
 
-    # return df
+    return df
 
 def get_tract_data():
     df1 = pd.read_csv('Data/TractPop.csv')
