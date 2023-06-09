@@ -20,7 +20,7 @@ from utils import (
 
 app = Dash(__name__, suppress_callback_exceptions=True, external_stylesheets=[dbc.themes.DARKLY])
 
-header = html.Div("Census Blocks", className="h2 p-2 text-white bg-primary text-center")
+header = html.Div("Arapahoe County Population", className="h2 p-2 text-white bg-primary text-center")
 
 bgcolor = "#f3f3f1"  # mapbox light map land color
 
@@ -55,7 +55,12 @@ def blank_fig(height):
 
 app.layout = dbc.Container([
     header,
-    dbc.Row(dcc.Graph(id='sa-map', figure=blank_fig(500))),
+    dbc.Row([
+        html.Div([
+            dbc.Card(
+                dcc.Graph(id='sa-map', figure=blank_fig(500))),
+        ]),
+    ]), 
     dbc.Row([
         dbc.Col([
             dcc.RadioItems(
@@ -82,9 +87,30 @@ app.layout = dbc.Container([
             # dcc.Dropdown(id='graph-type')
         ], width=4)
     ]),
+    dbc.Row([
+        dbc.Col([
+            html.Div(id='tract-stats')
+        ], width=4)
+    ]),
     dcc.Store(id='geo-data', storage_type='memory'),
     dcc.Store(id='all-tracts', storage_type='memory'),
+    dcc.Store(id='gt-json', storage_type='memory'),
 ])
+
+@app.callback(
+        Output('tract-stats', 'children'),
+        Input('geometry', 'value'),
+        Input('gt-json', 'data'))
+def get_tract_stats(geometry, gt_json):
+    gtj = gpd.read_file(gt_json)
+    print(gtj['Total'])
+    tot_pop = gtj['Total'].sum()
+    print(tot_pop)
+
+
+    return html.Div([
+        dbc.Card(html.H6('Total Selected Pop = {}'.format(tot_pop)))
+    ])
 
 @app.callback(
         Output('geo-data', 'data'),
@@ -155,6 +181,7 @@ def update_tract_dropdown(clickData, selectedData, tracts, clickData_state):
 
 @app.callback(
     Output("sa-map", "figure"),
+    Output('gt-json', 'data'),
     Input("geo-data", "data"),
     Input("geometry", "value"),
     Input("tracts", "value")
@@ -163,9 +190,9 @@ def update_Choropleth(geo_data, geometry, tracts):
     if geometry == "Block Groups":
         df = get_block_group_data()
         geo_data = gpd.read_file(geo_data)
-        # print(geo_data)
-        # print(geo_data.columns)
-        # print(geo_data['GEOID20'])
+        # print(df)
+
+
     elif geometry == "Blocks":
         df = get_block_data()
         geo_data = gpd.read_file(geo_data)
@@ -180,11 +207,13 @@ def update_Choropleth(geo_data, geometry, tracts):
         # tracts = list(map(str, tracts))
         geo_tracts_highlights = df[df['GEOID'].isin(tracts)]
         print(geo_tracts_highlights)
+        tot_pop = geo_tracts_highlights['Total'].sum()
+        print(tot_pop)
     
     fig = get_figure(df, geo_data, geo_tracts_highlights)
 
 
-    return fig
+    return fig, geo_tracts_highlights.to_json()
 
 if __name__ == "__main__":
     app.run_server(debug=True, port=8000)
