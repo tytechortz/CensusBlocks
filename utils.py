@@ -18,22 +18,22 @@ tract_geo_data = gpd.read_file('2020_CT/ArapahoeCT.shp')
 tract_geo_data = tract_geo_data.rename(columns={'FIPS':'GEOID'})
 tract_geo_data['GEOID'] = tract_geo_data['GEOID'].astype(int)
 
-# def get_block_group_data():
+def get_block_group_data():
    
-#     df1 = pd.read_csv('Data/BlockGroupPop.csv')
+    df1 = pd.read_csv('Data/BlockGroupPop.csv')
    
-#     geo_data = gpd.read_file('tl_2022_08_bg (1)/tl_2022_08_bg.shp')
+    geo_data = gpd.read_file('tl_2022_08_bg (1)/tl_2022_08_bg.shp')
    
-#     geo_arap = geo_data[geo_data['COUNTYFP'] == "005"]
+    geo_arap = geo_data[geo_data['COUNTYFP'] == "005"]
    
-#     df1['Total'] = df1['Total'].str.replace(',', '').astype(int)
+    df1['Total'] = df1['Total'].str.replace(',', '').astype(int)
    
-#     geo_arap['GEOID'] = geo_arap['GEOID'].astype(int)
-#     df = geo_arap.merge(df1, on="GEOID")
-#     df.to_csv("GEOID.csv")
+    geo_arap['GEOID'] = geo_arap['GEOID'].astype(int)
+    df = geo_arap.merge(df1, on="GEOID")
+    df.to_csv("GEOID.csv")
    
 
-    # return df
+    return df
 
 def get_block_data():
     df1 = pd.read_csv('Data/BlockPop.csv')

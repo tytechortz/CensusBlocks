@@ -12,7 +12,7 @@ from figures_utilities import (
 from utils import (
     get_tract_data,
     get_block_data,
-    # get_block_group_data,
+    get_block_group_data,
     # get_block_group_geo_data,
     # get_tract_geo_data,
     # get_block_geo_data
@@ -97,6 +97,11 @@ def get_geo_data(geometry):
         # print(all_tracts)
         tract_list_df = pd.DataFrame(all_tracts, columns=['tracts'])
         # print(tract_list_df)
+    elif geometry == 'Block Groups':
+        geo_df = get_block_group_data()
+        print(geo_df)
+        all_tracts = geo_df["GEOID"].values
+        tract_list_df = pd.DataFrame(all_tracts, columns=['tracts'])
     return geo_df.to_json(), tract_list_df.to_json()
 
 @app.callback(
@@ -150,7 +155,7 @@ def update_tract_dropdown(clickData, selectedData, tracts, clickData_state):
 def update_Choropleth(geo_data, geometry, tracts):
     if geometry == "Block Groups":
         df = get_block_group_data()
-        geo_data = bg_geo_data
+        geo_data = gpd.read_file(geo_data)
         # print(geo_data)
         # print(geo_data.columns)
         # print(geo_data['GEOID20'])
