@@ -82,8 +82,8 @@ app.layout = dbc.Container([
             # dcc.Dropdown(id='graph-type')
         ], width=4)
     ]),
-    dcc.Store(id='geo-data', storage_type='session'),
-    dcc.Store(id='all-tracts', storage_type='session'),
+    dcc.Store(id='geo-data', storage_type='memory'),
+    dcc.Store(id='all-tracts', storage_type='memory'),
 ])
 
 @app.callback(
@@ -99,9 +99,15 @@ def get_geo_data(geometry):
         # print(tract_list_df)
     elif geometry == 'Block Groups':
         geo_df = get_block_group_data()
-        print(geo_df)
+        # print(geo_df)
         all_tracts = geo_df["GEOID"].values
         tract_list_df = pd.DataFrame(all_tracts, columns=['tracts'])
+    elif geometry == 'Blocks':
+        geo_df = get_block_data()
+        all_tracts = geo_df["GEOID"].values
+        # print(all_tracts)
+        tract_list_df = pd.DataFrame(columns=["tracts"])
+        # print(tract_list_df)
     return geo_df.to_json(), tract_list_df.to_json()
 
 @app.callback(
@@ -111,7 +117,7 @@ def get_geo_data(geometry):
 def tract_options(geometry, tracts):
     all_tracts = pd.read_json(tracts)
     # all_tracts = pd.DataFrame(eval(tracts))
-    print(all_tracts)
+    # print(all_tracts)
     # print(geometry)
     options = ()
     # if geometry == "Tracts":
@@ -138,7 +144,7 @@ def update_tract_dropdown(clickData, selectedData, tracts, clickData_state):
 
     if clickData is not None and "customdata" in clickData["points"][0]:
         tract = clickData["points"][0]["customdata"]
-      
+        # print(tract)
         if tract in tracts:
             tracts.remove(tract)
         elif len(tracts) < 10:
@@ -162,7 +168,7 @@ def update_Choropleth(geo_data, geometry, tracts):
         # print(geo_data['GEOID20'])
     elif geometry == "Blocks":
         df = get_block_data()
-        geo_data = block_geo_data
+        geo_data = gpd.read_file(geo_data)
     elif geometry == "Tracts":
         df = get_tract_data()
         # print(df)
@@ -173,7 +179,7 @@ def update_Choropleth(geo_data, geometry, tracts):
     if tracts != None:
         # tracts = list(map(str, tracts))
         geo_tracts_highlights = df[df['GEOID'].isin(tracts)]
-    
+        print(geo_tracts_highlights)
     
     fig = get_figure(df, geo_data, geo_tracts_highlights)
 
