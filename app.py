@@ -114,8 +114,9 @@ def tract_options(geometry, tracts):
     print(all_tracts)
     # print(geometry)
     options = ()
-    if geometry == "Tracts":
-        options = [{'label': i, 'value': i} for i in all_tracts['tracts']]
+    # if geometry == "Tracts":
+    options = [{'label': i, 'value': i} for i in all_tracts['tracts']]
+    
 
     return options 
 
