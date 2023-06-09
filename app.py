@@ -106,11 +106,11 @@ def get_geo_data(geometry):
 def tract_options(geometry, tracts):
     all_tracts = pd.read_json(tracts)
     # all_tracts = pd.DataFrame(eval(tracts))
-    # print(all_tracts)
+    print(all_tracts)
     # print(geometry)
     options = ()
     if geometry == "Tracts":
-        options = [{'label': i, 'value': i} for i in all_tracts]
+        options = [{'label': i, 'value': i} for i in all_tracts['tracts']]
 
     return options 
 
@@ -161,7 +161,7 @@ def update_Choropleth(geo_data, geometry, tracts):
         df = get_tract_data()
         # print(df)
         geo_data = gpd.read_file(geo_data)
-        print(geo_data)
+        # print(geo_data)
     geo_tracts_highlights = ()
     # print(geo_data)
     if tracts != None:
