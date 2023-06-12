@@ -69,7 +69,7 @@ app.layout = dbc.Container([
                     {"label": i, "value": i}
                     for i in ["Blocks", "Block Groups", "Tracts"]
                 ],
-                value="Blocks",
+                value="Tracts",
                 inline=True
             ),
         ], width=2),
@@ -113,7 +113,10 @@ app.layout = dbc.Container([
 def get_tract_stats(geometry, gt_json):
     gtj = gpd.read_file(gt_json)
     # print(gtj['Total'])
-    tot_pop = gtj['Total'].sum()
+    if gtj.empty:
+        tot_pop=0
+    else:
+        tot_pop = gtj['Total'].sum()
     # print(tot_pop)
 
 
