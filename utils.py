@@ -11,8 +11,14 @@ bg_geo_arap = bg_geo_data[bg_geo_data['COUNTYFP'] == "005"]
 bg_geo_arap['GEOID'] = bg_geo_arap['GEOID'].astype(int)
 
 block_geo_data = gpd.read_file('Census_Blocks_2020_SHAPE_WGS/Census_Blocks_2020_WGS.shp')
+# print(block_geo_data.columns)
+# print(block_geo_data['geometry'])
+# print(block_geo_data['P0010003'])
+block_geo_data.drop(block_geo_data.columns[[0,1,6,7,8,9,10,15,16,17,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33]], axis=1, inplace=True)
 block_geo_data['GEOID'] = block_geo_data['GEOID'].apply(lambda x: x[9:])
 block_geo_data['GEOID'] = block_geo_data['GEOID'].astype(int)
+
+block_df1 = pd.read_csv('Data/BlockPop.csv')
 
 tract_geo_data = gpd.read_file('2020_CT/ArapahoeCT.shp')
 tract_geo_data = tract_geo_data.rename(columns={'FIPS':'GEOID'})
@@ -36,21 +42,22 @@ def get_block_group_data():
     return df
 
 def get_block_data():
-    df1 = pd.read_csv('Data/BlockPop.csv')
+    # df1 = pd.read_csv('Data/BlockPop.csv')
     
-    geo_data = gpd.read_file('Census_Blocks_2020_SHAPE_WGS/Census_Blocks_2020_WGS.shp')
+    # geo_data = gpd.read_file('Census_Blocks_2020_SHAPE_WGS/Census_Blocks_2020_WGS.shp')
     # print(geo_data.columns)
-    geo_arap = geo_data[geo_data['COUNTYFP20'] == "005"]
+    # geo_arap = geo_data[geo_data['COUNTYFP20'] == "005"]
+    # geo_arap = block_geo_data
     # print(geo_arap.columns)
     # print(block_geo_data.columns)
-    geo_arap['GEOID'] = geo_arap['GEOID'].apply(lambda x: x[9:])
-    df1['Total'] = df1['Total'].str.replace(',', '').astype(int)
+    # geo_arap['GEOID'] = geo_arap['GEOID'].apply(lambda x: x[9:])
+    # df1['Total'] = df1['Total'].str.replace(',', '').astype(int)
     # geo_arap['GEOID'] = geo_arap['GEOID'].str.replace(',', '').astype(int)
-    geo_arap['GEOID'] = geo_arap['GEOID'].astype(int)
+    # geo_arap['GEOID'] = geo_arap['GEOID'].astype(int)
     # print(block_geo_data)
     
-    df = geo_arap.merge(df1, on="GEOID")
-    # print(df['GEOID'])
+    df = block_geo_data.merge(block_df1, on="GEOID")
+    print(df)
     
 
     return df

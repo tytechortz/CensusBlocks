@@ -37,10 +37,10 @@ def get_map(df):
     return fig
 
 
-def get_figure(df, geo_data, geo_tracts_highlights):
+def get_figure(df, geo_data, geo_tracts_highlights, opacity):
 
     # print(df)
-    fig = get_Choropleth(df, geo_data, marker_opacity=0.4,
+    fig = get_Choropleth(df, geo_data, marker_opacity=opacity,
                          marker_line_width=1, marker_line_color='#6666cc')
     
     

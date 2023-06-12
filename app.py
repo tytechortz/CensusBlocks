@@ -69,7 +69,7 @@ app.layout = dbc.Container([
                     {"label": i, "value": i}
                     for i in ["Blocks", "Block Groups", "Tracts"]
                 ],
-                value="Tracts",
+                value="Blocks",
                 inline=True
             ),
         ], width=2),
@@ -85,7 +85,16 @@ app.layout = dbc.Container([
                 value=(),
             ),
             # dcc.Dropdown(id='graph-type')
-        ], width=4)
+        ], width=8),
+        dbc.Col([
+                dcc.Slider(0, .5, value=1,
+                    marks={
+                        0: {'label': 'Light', 'style': {'color': 'white'}},
+                        .5: {'label': 'Dark', 'style': {'color': 'white'}},
+                    },
+                    id = 'opacity',
+                ),
+            ], width=2),
     ]),
     dbc.Row([
         dbc.Col([
@@ -103,9 +112,9 @@ app.layout = dbc.Container([
         Input('gt-json', 'data'))
 def get_tract_stats(geometry, gt_json):
     gtj = gpd.read_file(gt_json)
-    print(gtj['Total'])
+    # print(gtj['Total'])
     tot_pop = gtj['Total'].sum()
-    print(tot_pop)
+    # print(tot_pop)
 
 
     return html.Div([
@@ -184,9 +193,10 @@ def update_tract_dropdown(clickData, selectedData, tracts, clickData_state):
     Output('gt-json', 'data'),
     Input("geo-data", "data"),
     Input("geometry", "value"),
-    Input("tracts", "value")
+    Input("tracts", "value"),
+    Input('opacity', 'value')
 )
-def update_Choropleth(geo_data, geometry, tracts):
+def update_Choropleth(geo_data, geometry, tracts, opacity):
     if geometry == "Block Groups":
         df = get_block_group_data()
         geo_data = gpd.read_file(geo_data)
@@ -206,11 +216,11 @@ def update_Choropleth(geo_data, geometry, tracts):
     if tracts != None:
         # tracts = list(map(str, tracts))
         geo_tracts_highlights = df[df['GEOID'].isin(tracts)]
-        print(geo_tracts_highlights)
+        # print(geo_tracts_highlights)
         tot_pop = geo_tracts_highlights['Total'].sum()
-        print(tot_pop)
+        # print(tot_pop)
     
-    fig = get_figure(df, geo_data, geo_tracts_highlights)
+    fig = get_figure(df, geo_data, geo_tracts_highlights, opacity)
 
 
     return fig, geo_tracts_highlights.to_json()
