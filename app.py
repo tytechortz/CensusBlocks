@@ -5,6 +5,7 @@ import pandas as pd
 import plotly.graph_objects as go
 import json
 import random
+import numpy as np
 from figures_utilities import (
     get_figure
 )
@@ -87,7 +88,7 @@ app.layout = dbc.Container([
             # dcc.Dropdown(id='graph-type')
         ], width=8),
         dbc.Col([
-                dcc.Slider(0, .5, value=1,
+                dcc.Slider(0, .5, value=.5,
                     marks={
                         0: {'label': 'Light', 'style': {'color': 'white'}},
                         .5: {'label': 'Dark', 'style': {'color': 'white'}},
@@ -191,14 +192,26 @@ def update_tract_dropdown(clickData, selectedData, tracts, clickData_state):
   
     return tracts
 
+# @app.callback(
+#         Output("points-store", "data"),
+#         Input("sa-map", "relayoutData"))
+# def get_map_corners(mbx_cfg):
+#     print(mbx_cfg)
+    # bbox = np.array(mbx_cfg["mapbox._derived"]["coordinates"])
+    # data = {
+    #     "lon": bbox[:, 0].tolist() + [mbx_cfg["mapbox.center"]["lon"]],
+    #     "lat": bbox[:, 1].tolist() + [mbx_cfg["mapbox.center"]["lat"]],
+    # }
+
+    # return (print(mbx_cfg))
+
 @app.callback(
     Output("sa-map", "figure"),
     Output('gt-json', 'data'),
     Input("geo-data", "data"),
     Input("geometry", "value"),
     Input("tracts", "value"),
-    Input('opacity', 'value')
-)
+    Input("opacity", "value"))
 def update_Choropleth(geo_data, geometry, tracts, opacity):
     if geometry == "Block Groups":
         df = get_block_group_data()
@@ -208,19 +221,30 @@ def update_Choropleth(geo_data, geometry, tracts, opacity):
 
     elif geometry == "Blocks":
         df = get_block_data()
+        
+
         geo_data = gpd.read_file(geo_data)
     elif geometry == "Tracts":
         df = get_tract_data()
-        # print(df)
+        # print(df['geometry'])
         geo_data = gpd.read_file(geo_data)
         # print(geo_data)
     geo_tracts_highlights = ()
     # print(geo_data)
     if tracts != None:
+        # print(tracts)
         # tracts = list(map(str, tracts))
+        # df1 = df.set_index('GEOID')
+        # df1 = df1.sort_index()
+        # print(type(tracts))
+        # print(df1)
+        # geo_tracts_highlights = df[[df["GEOID"] in tracts]]
+        # geo_tracts_highlights = df.loc[df.apply(lambda x: x["GEOID"] in tracts, axis=1)]
         geo_tracts_highlights = df[df['GEOID'].isin(tracts)]
+        # print(geo_tracts_highlights["geometry"])
+        # geo_tracts_highlights["geometry"] = geo_tracts_highlights.simplify(tolerance=200000)
         # print(geo_tracts_highlights)
-        tot_pop = geo_tracts_highlights['Total'].sum()
+        # tot_pop = geo_tracts_highlights['Total'].sum()
         # print(tot_pop)
     
     fig = get_figure(df, geo_data, geo_tracts_highlights, opacity)

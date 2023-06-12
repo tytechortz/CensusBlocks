@@ -49,7 +49,10 @@ def get_figure(df, geo_data, geo_tracts_highlights, opacity):
                             # mapbox_layers=layer,
                             mapbox_center={"lat": 39.65, "lon": -104.8},
                             margin={"r":0,"t":0,"l":0,"b":0},
-                            uirevision='constant')
+                            autosize=True,
+                            uirevision='constant'),
+    
+                        
     
     if len(geo_tracts_highlights) != 0:
         fig = get_Choropleth(df, geo_tracts_highlights, marker_opacity=1.0,
